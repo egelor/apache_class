@@ -1,7 +1,8 @@
 # Open the org file with Emacs
 * SUBJECT - Apache2 Server on Unix
-** Επεξεργαστήτε αυτά τα αρχεία στο με ένα οποιοδήποτε editor πχ nano προτεινόμενο το emacs
+** Επεξεργαστήτε αυτά τα αρχεία με ένα οποιοδήποτε editor πχ nano προτεινόμενο το emacs
 *** file: [[file:/etc/networks/interfaces][/etc/networks/interfaces]]  
+#+BEGIN_SRC
 auto eth0
 iface eth0 inet static
       address 192.168.2.6 
@@ -11,7 +12,7 @@ iface eth0 inet static
       gateway 192.168.2.1
       dns-nameservers 192.168.2.1
       up ethtool -s eth0 wol g
-
+#+END_SRC
 *** file: [[file:/etc/apache2/apache2.conf][/etc/apache2/apache.conf]]
 - Κοιτάξτε μέσα στο αρχείο με το emacs σας με Κοντρόλ+χ Κοντρόλ-f ανοίγετε το αρχείο.
 Αντικαταστήστε στην πρώτη γραμμή το ServerName 192.168.2.6 με το δικό σας ip.
