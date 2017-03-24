@@ -1,0 +1,102 @@
+# Open the org file with Emacs
+* SUBJECT - Apache2 Server on Unix
+** Επεξεργαστήτε αυτά τα αρχεία στο με ένα οποιοδήποτε editor πχ nano προτεινόμενο το emacs
+*** file: [[file:/etc/networks/interfaces][/etc/networks/interfaces]]  
+auto eth0
+iface eth0 inet static
+      address 192.168.2.6 
+      netmask 255.255.255.0
+      network 192.168.2.0
+      broadcast 192.168.2.255
+      gateway 192.168.2.1
+      dns-nameservers 192.168.2.1
+      up ethtool -s eth0 wol g
+
+*** file: [[file:/etc/apache2/apache2.conf][/etc/apache2/apache.conf]]
+- Κοιτάξτε μέσα στο αρχείο με το emacs σας με Κοντρόλ+χ Κοντρόλ-f ανοίγετε το αρχείο.
+Αντικαταστήστε στην πρώτη γραμμή το ServerName 192.168.2.6 με το δικό σας ip.
+
+- Αν θέλετε ο κάθε χρήστης να έχει την δική του ιστιοσελίδα τότε προσθέστε UserDir public_html
+και κάντε ένα φάκελο public_html για κάθε χρήστη. 
+- Σώζετε το αρχείο με Κοντρόλ και χ Κοντρόλ και s και κλείνετε το αρχείο με Κοντρόλ και χ Κοντρόλ και Κ   
+*** file: [[file:/etc/apache2/ports.conf][/etc/apache2/ports]]
+- change the NameVirtualHost *:8008 that is the port i open to the port you like 
+- Change the Listen port also.
+*** file: [[file:/etc/apache2/sites-enabled/000-default.conf][/etc/apache2/site-enable/000-default]]
+# Ανοίξτε το αρχείο 000-default βάλτε και εδώ την θύρα (πόρτα) πού είχατε βάλει 
+# και στο αρχειο ports στην περίπτωση μου 8008 όλα τα άλλα τα ίδια
+ <VirtualHost *:8008>
+DocumentRoot /var/www/html
+
+<Directory />
+    Options FollowSymLinks MultiViews
+    AllowOverride All
+</Directory>
+
+<Directory "/var/www/html">
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+**
+** Στο τερματικό σας 
+*** enable site
+#+BEGIN_SRC
+a2ensite 000-default
+#+END_SRC
+or
+#+BEGIN_SRC
+sudo a2ensite 000-default
+#+END_SRC
+
+*** Αν δεν έχετε φάκελο html στον /var/www/  φάκελο τότε φτιάξτε ένα με
+mkdir /var/www/html
+ή
+sudo mkdir /var/www/html 
+*** δώστε πρόσβαση στους χρήστες με την εντολη 
+#+BEGIN_SRC
+chmod -R 755 /var/www/html 
+#+END_SRC
+- 4  να με αφήνει να διάβάσω
+  2 να με αφήνει να γράψω
+  1 να με αφήνει να εκτελώ
+άρα εμείς δώσαμε διάβασε γράψε εκτέλεσε στο χρήστη μετά πάει το group που δώσαμε διάβασε εκτέλεσε  4+1 και τέλος για τους υπόλοιπυς και πάλι διάβασε εκτέλεσε
+στο φάκελο html. Το ίδιο και για τον φάκελο του κάθε χρήστη public_html
+#+BEGIN_SRC
+chmod -R 755 /home/user/public_html
+#+END_SRC
+*** change the file owner and group 
+example with the user egelor
+#+BEGIN_SRC
+sudo chown egelor:www-data /var/www/html
+sudo chown egelor:www-data /home/egelor/public_html
+#+END_SRC
+*** RESTART SERVER
+#+BEGIN_SRC
+service apache2 restart
+#+END_SRC
+** Tips (help with terminal)
+1) up arrow the previous command
+****  if you want a better shell download zsh shell with 
+#+BEGIN_SRC 
+sudo apt-get install zsh 
+#+END_SRC
+- put my .zshrc which is the configuration file, inside your home folder and make zsh shell permanet shell with the command
+#+BEGIN_SRC
+chsh -S $(which zsh)
+#+END_SRC
+- just write in your command line zsh
+****  with TAB key the computer fills the line
+ example you want to go to the /var/www/html folder
+cd /var/w TAB goes to /var/www/ TAB shows the html folder hit ENTER
+the same you can do with the commands too. 
+
+**** Usefull commands for the server
+#+BEGIN_SRC 
+sudo addgroup www-data
+#+END_SRC
+#+BEGIN_SRC
+sudo chown username:www-data /var/www/html 
+#+END_SRC
+
